@@ -21,4 +21,9 @@ select name from employee where (salary>2000 and months <10) order by employee_i
 select product_id from Products
 where low_fats ='Y' and recyclable = 'Y';
 --ex10
-
+select name from customer 
+where referee_id <> 2 or referee_id is NULL;
+--ex11
+select name, population, area from world
+where area >=3000000 or population >= 25000000;
+--ex12
