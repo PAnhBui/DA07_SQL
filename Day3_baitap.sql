@@ -27,3 +27,15 @@ where referee_id <> 2 or referee_id is NULL;
 select name, population, area from world
 where area >=3000000 or population >= 25000000;
 --ex12
+select distinct author_id as id from views
+where author_id = viewer_id
+order by id;
+--ex13
+SELECT * FROM parts_assembly
+WHERE finish_date is NULL;
+-- ex14
+select * from lyft_drivers
+where yearly_salary <=30000 or yearly_salary>=70000;
+--ex15
+select * from uber_advertising
+where year =2019 and money_spent >100000;
