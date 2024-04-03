@@ -27,3 +27,42 @@ last_name,
 -- first_name ||' '|| last_name as FUll_NAME -- || dùng để nối chuỗi
 CONCAT(first_name,' ',last_name) AS full_name
 FROM customer
+/* CHALLENGE nỗi chuỗi 
+MARY.SMITH@sakilacustomer.org => MAR***H@sakilacustomer.org */
+select email,
+LEFT (email,3) || '***' || RIGHT (email,20)
+from customer
+-- REPLACE
+SELECT email,
+REPLACE (email, '.org','.com') AS new_email
+FROM customer
+-- ex3 of practice 5
+select CEILING (AVG(salary) - avg(REPLACE (salary,'0','')))
+from employee
+-- POSITION
+SELECT email,
+LEFT (email,(POSITION  ('@' IN email))-1)
+FROM customer
+-- 6) SUBSTRING()
+-- lấy ra ký tự từ 2 đến 4 của first_name trong bảng customer
+SELECT first_name,
+SUBSTRING(first_name FROM 2 FOR 3) 
+FROM customer
+-- lấy thông tin họ KH từ email
+select email, 
+substring (email from position ('.'IN email) + 1  for position ('@'in email) - position ('.' IN email)-1) as HO_KH
+FROM customer
+*/
+SELECT email,
+SUBSTRING(email FROM POSITION ( '.' IN email) +1 FOR POSITION ( '@' IN email)-POSITION ( '.' IN email)-1) as HO_KH
+FROM customer 
+-- 7) EXTRACT() dùng để trích xuất thông tin Năm, tháng, ngày, giờ.. của 1 date/datetime kết quả trả ra dưới dạng number
+SELECT * FROM rental
+WHERE EXTRACT( 'year' FROM rental_date) =2020
+-- 8) TO_CHAR () lấy thông tin datetime theo định dạng momg muốn(forrmat) 
+SELECT TO_CHAR(payment_date, 'year') 
+FROM payment
+-- 9) Intervals & Timestamp
+SELECT current_date,--ngày hiện tại
+current_timestamp, -- ngày giờ hiện tại
+returndate-rental_date AS rental_time -- là 1 interval
