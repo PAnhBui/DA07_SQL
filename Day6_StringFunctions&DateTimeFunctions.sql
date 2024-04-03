@@ -19,5 +19,11 @@ from customer
 select email, 
 left (right (email,4),1)
 from customer
-
 -- CONCATENATE (Nối chuỗi)
+SELECT
+customer_ID,
+first_name,
+last_name,
+-- first_name ||' '|| last_name as FUll_NAME -- || dùng để nối chuỗi
+CONCAT(first_name,' ',last_name) AS full_name
+FROM customer
