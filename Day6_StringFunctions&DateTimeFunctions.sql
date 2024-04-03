@@ -66,3 +66,15 @@ FROM payment
 SELECT current_date,--ngày hiện tại
 current_timestamp, -- ngày giờ hiện tại
 returndate-rental_date AS rental_time -- là 1 interval
+-- challenge 
+
+select rental_date,return_date, customer_ID,
+return_date-rental_date AS rental_time
+from rental
+WHERE customer_id =35
+
+SElect customer_id,
+AVG (return_date-rental_date) AS avg_rental_time
+from rental
+GROUP BY customer_ID
+ORDER BY customer_ID desc
