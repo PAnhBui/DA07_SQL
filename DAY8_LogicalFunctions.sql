@@ -115,6 +115,25 @@ SUM( CASE
 FROM payment
 GROUP BY customer_id
 ORDER BY customer_id
+---CHallenge
+/* Bạn cần thống kê có bao nhiêu bộ phim được đánh giá R , PG, PG-13 ở các thể loại phim long-medium-short
+-long: length >120
+-medium: 60 <= length <=120
+- short: length <60 */
+Select 
+case 
+when length >120 then 'long'
+when length between 60 and 120 then 'medium'
+else 'short'
+end category,
+sum (case 
+   when rating ='R' then 1 else 0
+	  end ) as R,
+sum (case  when rating ='PG' then 1 else 0 end) as PG,
+sum (case when rating ='PG-13' then 1 else 0 end) as PG_13
+from film
+group by category
+
 --3) COALESCE dùng để thay thế giá trị NULL ở 1 trường nào đó
 SELECT scheduled_arrival,
 actual_arrival,
