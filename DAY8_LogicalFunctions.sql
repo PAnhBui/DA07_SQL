@@ -100,4 +100,38 @@ WHERE CASE
   WHEN description LIKE '%Drama%' AND length <=90 THEN 'Shcity drama (tier 3)'
   WHEN rental_rate <1 THEN 'Very cheap (tier 4)'
 END IS NOT NULL
-
+--2) PIVOT BY CASE-WHEN
+/*Tính tổng số tiền theo từng loại hoá đơn high-medium-low
+- high: amount>10
+- medium : 5<=amount<=10
+- low: amount<5*/
+SELECT customer_id,
+SUM( CASE
+  WHEN amount>10 THEN amount ELSE 0 END) AS high,
+SUM( CASE
+  WHEN amount BETWEEN 5 AND 10 THEN amount ELSE 0 END) AS medium,
+SUM( CASE
+  WHEN amount <5  THEN amount ELSE 0 END) AS low
+FROM payment
+GROUP BY customer_id
+ORDER BY customer_id
+--3) COALESCE dùng để thay thế giá trị NULL ở 1 trường nào đó
+SELECT scheduled_arrival,
+actual_arrival,
+COALESCE(actual_arrival, '2020-01-01'),
+COALESCE(actual_arrival, scheduled_arrival),
+COALESCE(actual_arrival-scheduled_arrival, '00:00')
+FROM bookings.flights
+--4) CAST
+-- string => number ( string phải chứa các chữ số, ko được chứa ký tự a,b,c..)
+SELECT 
+CAST(ticket_no AS bigint) 
+FROM bookings.flights
+-- number=> string 
+SELECT 
+CAST(amount AS VARCHAR) 
+FROM bookings.flights
+-- datetime=> string 
+SELECT 
+CAST(scheduled_departure AS VARCHAR) 
+FROM bookings.flights
