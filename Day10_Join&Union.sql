@@ -18,7 +18,7 @@ from bookingS.boarding_passes as F
 INNER JOIN bookings.seats as S
 ON F.seat_no=S.seat_no
 group by S.fare_conditions
--- LEFT JOIN/ RIGHT JOIN
+--2 )LEFT JOIN/ RIGHT JOIN
 --- CÚ PHÁP (table1 LEFT JOIN table 2)
 SELECT t1.*,t2.* --hiển thị thông tin bảng 1 và bảng 2
 FROM table1 AS t1 -- sau khi lấy bảng 1 left join vs bảng 2
@@ -29,3 +29,27 @@ SELECT t1.*,t2.* --hiển thị thông tin bảng 1 và bảng 2
 FROM table1 AS t1 -- sau khi lấy bảng 1 right join vs bảng 2
 RIGHT JOIN table2 AS t2 -- bảng sau RIGHT JOIN là bảng gốc
 ON t1.key=t2.key; -- thông qua key join
+--tìm thông tin các chuyến bay của từng máy bay
+--B1: xác định bảng gốc, 
+--B2: xác định key join aircraft_code
+-- B3: chọn phương thức JOIN
+SELECT a.aircraft_code, b.*
+from bookings.aircrafts_data AS a
+LEFT JOIN bookings.FLIGHTS AS b
+ON a.aircraft_code=b.aircraft_code
+
+/* 2.1) Challenge
+a. Tìm hiểu ghế nào nào được chọn thường xuyên nhất.
+Đảm bảo tất cả các ghế đều được liệt kê ngay cả khi chúng chưa bao giờ được đặt.
+b. Có chỗ ngồi nào chưa bao giờ được đặt không?
+c. Chỉ ra hàng ghế nào được đặt thường xuyên nhất (A,B,C...)*/
+--a.
+select a.seat_no, -- Tìm hiểu ghế nào nào được chọn thường xuyên nhất
+Count (flight_id) as count
+from bookings.seats as a
+LEFT JOIN bookings.boarding_passes as b
+ON a.seat_no=b.seat_no
+GROUP BY a.seat_no
+ORDER BY count (flight_id) desc
+--b. 
+
