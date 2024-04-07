@@ -12,3 +12,20 @@ ON a.customer_id=b.customer_id
 order by a.customer_id
 -- 1.1. Challenge
 --có bn ng chọn ghế ngồi theo các loại business, economy, comfort
+SELECT S.fare_conditions,
+Count (flight_id) as Count
+from bookingS.boarding_passes as F
+INNER JOIN bookings.seats as S
+ON F.seat_no=S.seat_no
+group by S.fare_conditions
+-- LEFT JOIN/ RIGHT JOIN
+--- CÚ PHÁP (table1 LEFT JOIN table 2)
+SELECT t1.*,t2.* --hiển thị thông tin bảng 1 và bảng 2
+FROM table1 AS t1 -- sau khi lấy bảng 1 left join vs bảng 2
+LEFT JOIN table2 AS t2 -- bảng sau FROM là bảng gốc
+ON t1.key=t2.key; -- thông qua key join
+
+SELECT t1.*,t2.* --hiển thị thông tin bảng 1 và bảng 2
+FROM table1 AS t1 -- sau khi lấy bảng 1 right join vs bảng 2
+RIGHT JOIN table2 AS t2 -- bảng sau RIGHT JOIN là bảng gốc
+ON t1.key=t2.key; -- thông qua key join
