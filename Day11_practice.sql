@@ -34,3 +34,24 @@ SELECT
 FROM snaps_statistics;
 --ex4
 
+SELECT a.customer_id
+FROM customer_contracts as a
+JOIN products as b
+ON a.product_id=b.product_id
+WHERE b.product_category	IN ('Containers','Analytics','Compute')
+GROUP BY (a.customer_id)
+having COUNT(DISTINCT b.product_category) =3
+--EX5 
+SELECT 
+  mgr.employee_id, 
+  mgr.name, 
+  COUNT(emp.employee_id) AS reports_count, 
+  ROUND( AVG(emp.age)) AS average_age 
+FROM 
+  employees AS emp 
+  JOIN employees AS mgr ON emp.reports_to = mgr.employee_id 
+GROUP BY mgr.employee_id, mgr.name
+ORDER BY mgr.employee_id
+
+--EX6
+
