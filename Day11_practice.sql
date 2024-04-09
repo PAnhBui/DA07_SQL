@@ -70,3 +70,55 @@ LEFT JOIN page_likes as b
 ON a.page_id=b.page_id
 WHERE liked_date is NULL
 ORDER BY a.page_id
+
+-MID-COURSE TEST
+--Q1
+-- Task
+SELECT DISTINCT replacement_cost
+FROM film 
+-- Question: 
+SELECT MIN (DISTINCT replacement_cost)
+FROM film 
+--Q2
+SELECT
+CASE 
+    WHEN replacement_cost BETWEEN 9.99 AND 19.99 then 'low'
+    WHEN  replacement_cost BETWEEN 20.00 AND 24.99 then 'medium'
+    ELSE 'high'
+END AS category,
+COUNT(*) AS so_luong
+FROM film
+GROUP BY category
+--Q3
+SELECT
+a.title, a.length , c.name as category_name
+FROM film as a
+JOIN film_category as b ON a.film_id=b.film_id
+JOIN category as c ON b.category_id=c.category_id
+WHERE c.name IN ('Drama','Sports')
+ORDER BY a.length DESC
+
+--Q4
+SELECT c.name as category_name, COUNT (title) as quantity
+FROM film as a
+JOIN film_category as b ON a.film_id=b.film_id
+JOIN category as c ON b.category_id=c.category_id
+GROUP BY c.name
+ORDER BY quantity desc --Thể loại danh mục phổ biến nhất
+
+--Q5
+SELECT a.first_name, a.last_name , COUNT (b.film_id) as movies
+FROM actor as a
+JOIN film_actor as b ON a.actor_id=b.actor_id
+GROUP BY a.first_name, a.last_name
+ORDER BY movies DESC
+
+--Q6
+SELECT COUNT (a.address_id)
+from public.address as a 
+LEFT JOIN  customer as b
+ON a.address_id=b.address_id
+WHERE b.customer_id is NULL
+
+
+
