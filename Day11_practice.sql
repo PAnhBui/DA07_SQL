@@ -54,4 +54,19 @@ GROUP BY mgr.employee_id, mgr.name
 ORDER BY mgr.employee_id
 
 --EX6
+select a.product_name, SUM (b.unit ) as unit
+from Products as a
+LEFT JOIN Orders as b
+ON a.product_id = b.product_id
+WHERE EXTRACT(month from b.order_date) = 2 AND EXTRACT(year from b.order_date) =2020
+GROUP BY a.product_name
+HAVING SUM (b.unit ) >=100
 
+--ex7 
+SELECT 
+a.page_id
+FROM pages as a
+LEFT JOIN page_likes as b
+ON a.page_id=b.page_id
+WHERE liked_date is NULL
+ORDER BY a.page_id
