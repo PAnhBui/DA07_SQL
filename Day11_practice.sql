@@ -12,7 +12,7 @@ FROM emails as a
 LEFT JOIN texts as b
   ON a.email_id = b.email_id
   AND b.signup_action = 'Confirmed';
---ex3
+--ex3 -CÂU NÀY EM TRA ĐÁP ÁN do DO ÁP DỤNG CHƯA RA ĐÁP ÁN
 WITH snaps_statistics AS (
   SELECT 
     age.age_bucket, 
