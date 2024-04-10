@@ -120,11 +120,24 @@ LEFT JOIN  customer as b
 ON a.address_id=b.address_id
 WHERE b.customer_id is NULL
 --Q7
-SELECT d.city, SUM (a.amount)
+SELECT d.city, 
+SUM (a.amount) as revenue 
 FROM payment as a
 JOIN customer as b ON a.customer_id=b.customer_id
 JOIN address as c ON b.address_id=c.address_id
 JOIN city as d ON c.city_id=d.city_id
-GROUP BY d.city, a.amount
+GROUP BY d.city
 ORDER BY SUM(a.amount) DESC
+
+--Q8
+SELECT d.city,
+e.country,
+SUM (a.amount) as revenue 
+FROM payment as a
+JOIN customer as b ON a.customer_id=b.customer_id
+JOIN address as c ON b.address_id=c.address_id
+JOIN city as d ON c.city_id=d.city_id
+JOIN country as e ON d.country_id=e.country_id
+GROUP BY d.city, e.country
+ORDER BY SUM(a.amount)
 
