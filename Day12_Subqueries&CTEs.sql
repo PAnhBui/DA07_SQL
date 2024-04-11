@@ -76,4 +76,59 @@ GROUP BY customer_id
 HAVING SUM (amount)>100)
 
 -5) CORRELATED SUBQUERIES IN SELECT
+-5) CORRELATED SUBQUERIES IN SELECT
+-- mã KH, tên KH, mã thanh toán, số tiền lớn nhất của từng KH
+SELECT 
+a.customer_id,
+a.first_name || a.last_name as Ho_ten,
+b.payment_id,
+(SELECT MAX (amount) FROM payment 
+ WHERE customer_id=a.customer_id -- ĐK where ở câu truy vấn con này
+ GROUP BY customer_id)
+FROM customer AS a -- tương ứng vs trường nào ở câu truy vấn chính
+JOIN payment AS b
+ON a.customer_id=b.customer_id
+GROUP BY
+a.customer_id,
+a.first_name || a.last_name,
+b.payment_id
+ORDER BY customer_id
+/* CHALLENGE 1 : video 4:47 
+-Liệt kê các khoản thanh toaná với tổng số hoá đơn 
+và tổng số tiền mỗi khách hàng phải trả */
+CHƯA NÀM
 
+/* CHALLENGE 2: video 5:27
+- Lấy ds các film có chi phí thay thế lớn nhất trong mỗi loại rating.
+Ngoài film_id, title,rating, chi phí thay thế cần hiển thị
+thêm chi phí tr binh mỗi loại raitng đó. */
+
+/* -6) CTEs (Common Table Expression):bảng chứa dữ liệu tạm thời
+từ câu lệnh được định nghĩa trong phạm vi của nó
+ -> chia nhỏ 1 câu lệnh SQL phức tạp thành các phần nhỏ hơn để giải quyết 
+ -> gộp lại để giải quyết wde tổng thể 
+ -cú pháp: WITH CTE name
+           CTE body (có thể viết câu lệnh SELECT hoàn chỉnh)
+           CTE usage (câu lệnh SELECT hoàn chỉnh)*
+
+-- Tìm KH có nhiều hơn 30 hoá đơn, kqua trả ra gồm các tt:
+-- mã Kh, tên KH, số lượng hoá đơn, tổng số tiền, tgian thuê tbinh */
+-- Giải: với nhưng tt chưa có sẵn -> tạo CTE tính toán trước khi 
+-- cho vào câu lệnh chính
+WITH twt_total_payment AS
+(SELECT customer_id,
+COUNT (payment_id) AS so_luong,
+SUM (amount) as so_tien
+FROM payment
+GROUP BY customer_id ),
+twt_avg_rental_time
+AS 
+( SELECT customer_id, 
+ AVG (return_date-rental_date) as rental_time
+ FROM rental
+ GROUP BY customer_id)
+SELECT  a.customer_id, a.first_name,b.so_luong,b.so_tien,c.rental_time
+FROM customer as a
+JOIN twt_total_payment as b ON a.customer_id=b.customer_id
+JOIN twt_avg_rental_time as c ON c. customer_id =a.customer_id
+WHERE b.so_luong >30
