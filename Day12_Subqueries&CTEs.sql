@@ -59,3 +59,21 @@ SELECT payment_id,amount,
 (SELECT MAX(amount) FROM payment) as Max_amount, (SELECT MAX(amount) FROM payment) - amount as diff
 FROM payment
 
+-4) CORRELATED SUBQUERIES IN WHERE (truy vẫn con tương quan)
+--lấy ra thông tin khách hàng từ bảng customer có tổng hoá đơn >100$
+
+SELECT customer.customer_id,
+SUM (payment.amount) as total 
+FROM customer
+JOIN payment ON customer.customer_id=payment.customer_id
+GROUP BY customer.customer_id
+HAVING SUM (payment.amount) >100
+
+SELECT * FROM customer
+WHERE EXISTS  (SELECT customer_id
+FROM payment
+GROUP BY customer_id
+HAVING SUM (amount)>100)
+
+-5) CORRELATED SUBQUERIES IN SELECT
+
