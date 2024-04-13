@@ -98,4 +98,36 @@ GROUP BY customer_id
 HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(product_key) FROM Product);
 
 --EX9
+SELECT emp.employee_id
+froM Employees AS Emp
+LEFT JOIN employees as mng
+on emp.manager_id=mng.employee_id
+WHERE emp.salary<30000 AND mng.employee_id is NULL
+
+-EX10: duplicate w/ exx1
+
+--ex11:
+(SELECT name AS results
+FROM MovieRating JOIN Users USING(user_id)
+GROUP BY name
+ORDER BY COUNT(*) DESC, name
+LIMIT 1)
+UNION ALL
+(SELECT title AS results
+FROM MovieRating JOIN Movies USING(movie_id)
+WHERE EXTRACT(YEAR FROM created_at) = 2020 AND EXTRACT(MONTH FROM created_at) =02
+GROUP BY title
+ORDER BY AVG(rating) DESC, title
+LIMIT 1);
+
+--ex12
+with cte as
+    (select requester_id as id from RequestAccepted
+        union all
+        select accepter_id as id from RequestAccepted)
+select id, count(id) as num
+from cte
+group by id
+order by num desc
+limit 1
 
