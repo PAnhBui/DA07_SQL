@@ -13,4 +13,25 @@ SELECT COUNT(DISTINCT company_id) AS duplicate_companies
 FROM cte_table
 WHERE job_count > 1;
 
--ex2
+-ex2/*
+output: category,	product,	total_spend
+dk: top 2 highest-grossing product within each category 2022.*/
+
+WITH spending_cte AS (
+SELECT category, 
+product,
+SUM(spend) AS total_spend,
+RANK() OVER (
+      PARTITION BY category 
+      ORDER BY SUM(spend) DESC) AS ranking
+FROM product_spend
+WHERE EXTRACT(year from transaction_date) =2022
+GROUP BY category, product
+ )
+
+SELECT category, 
+product, total_spend 
+FROM spending_cte
+WHERE ranking <= 2 
+ORDER BY category, ranking;
+
