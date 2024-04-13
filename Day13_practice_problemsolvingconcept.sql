@@ -14,7 +14,7 @@ FROM cte_table
 WHERE job_count > 1;
 
 -ex2/*
-output: category,	product,	total_spend
+output: category,	product,total_spend
 dk: top 2 highest-grossing product within each category 2022.*/
 
 WITH spending_cte AS (
@@ -27,8 +27,7 @@ RANK() OVER (
 FROM product_spend
 WHERE EXTRACT(year from transaction_date) =2022
 GROUP BY category, product
- )
-
+)
 SELECT category, 
 product, total_spend 
 FROM spending_cte
