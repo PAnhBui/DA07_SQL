@@ -47,6 +47,36 @@ lần thanh toán được thực hiện bởi khách hàng này và số tiền
 Sx kq theo Payment_id
 */
 SELECT *,
-COUNT (amount) OVER(PARTITION BY amount, customer_id)
+COUNT (*) OVER(PARTITION BY amount, customer_id)
 FROM payment
 ORDER BY payment_id
+  
+-OVER() with ORDER BY
+-- cú pháp:
+  SELECT col1,col2,...,
+  AGG(col2) OVER (PARTITION BY col1,col2,...ORDER BY col4)
+  FROM table_name
+-tính luỹ kế tổng doanh thu từ thời điẻm trước đấy đến thời điểm hiện tại
+SELECT payment_date,AMOUNT,
+SUM (amount) OVER (ORDER BY payment_date) as total_amount
+FROM payment
+
+- phân nhóm theo từng KH
+SELECT payment_date,amount,customer_id,
+SUM (amount) OVER (PARTITION BY customer_id ORDER BY payment_date) as total_amount
+FROM payment
+
+-- WINDOW FUNCTION with RANK FUNCTION
+--xếp hạng độ dài phim trong từng thể loại
+--outptut:film_id,category, length, xếp hạng độ dài phim trong từng cate
+SELECT a.film_id,a.length,c.name as category,
+  RANK () OVER (PARTITION BY c.name ORDER BY a.length DESC) as rank
+FROM film a
+JOIN public.film_category b ON a.film_id=b.film_id
+JOIN public.category c ON c.category_id=b.category_id
+/*Challenge: viết truy vấn trả về tên KH, QG, so lg thanh toán họ có
+- TẠo bảng xếp hạng những KH có doanh thu cao nhất cho mỗi QG
+- Lọc KQ chỉ 3 KH hàng đầu của mỗi QG*/
+
+
+
