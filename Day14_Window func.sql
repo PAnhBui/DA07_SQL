@@ -111,5 +111,22 @@ SELECT customer_id,payment_date,amount,
 amount - LEAD (amount,3) OVER (PARTITION BY customer_id ORDER BY payment_Date) as diff
 FROM payment
 
+/* CHALLENGE: Viết truy vấn trả về doanh thu trong ngày và doanh 
+thu của ngày hôm trước
+Sau đó tính toán phần trăm tăng trưởng so vs ngày hôm trước*/
+WITH twt_main_payment as (
+SELECT DATE (payment_date) as payment_date,
+SUM (amount) as amount
+FROM payment
+GROUP BY DATE (payment_date)
+) 
+SELECT *,
+LAG (payment_date) OVER (ORDER BY payment_date) as previous_amount,
+LAG (amount) OVER (ORDER BY payment_date) as previous_amount,
+ROUND(((amount-LAG (amount) OVER (ORDER BY payment_date) )/
+LAG (amount) OVER (ORDER BY payment_date) )*100.00,2) as percent_diff
+FROM twt_main_payment
+
+
 
 
