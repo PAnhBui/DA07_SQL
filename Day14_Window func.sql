@@ -77,6 +77,39 @@ JOIN public.category c ON c.category_id=b.category_id
 /*Challenge: viết truy vấn trả về tên KH, QG, so lg thanh toán họ có
 - TẠo bảng xếp hạng những KH có doanh thu cao nhất cho mỗi QG
 - Lọc KQ chỉ 3 KH hàng đầu của mỗi QG*/
+SELECT * FROM
+(SELECT a.first_name ||' '|| a.last_name AS full_name, d.country,
+COUNT (*) as so_luong, 
+SUM (e.amount) as amount,
+RANK () OVER (PARTITION BY d.country ORDER BY sum(e.amount)DESC ) as stt
+FROM customer a
+JOIN address b ON a.address_id=b.address_id
+JOIN city c ON c.city_id=b.city_id
+JOIN country d ON d.country_id=c.country_id
+JOIN payment e ON e.customer_id=a.customer_id
+GROUP BY a.first_name ||' '|| a.last_name , d.country) as T
+WHERE T.stt <=3
+
+--WINDOW FUNCTION WITH FIRST_VALUE
+-- số tiền thanh toán cho đơn hàng đầu tiên và gần đây nhất của từng KH
+SELECT * FROM (
+SELECT customer_id,payment_date,AMOUNT,
+ROW_NUMBER () OVER (PARTITION BY customer_id ORDER BY payment_date DESC) -- desc khi tìm ngày gần nhất
+AS stt
+FROM payment) AS a
+WHERE stt=1
+
+--WINDOW FUNCTION WITH LEAD(), LAG()
+-- tìm chênh lệch số tiền giữa các lần thanh toán LIÊN TIẾP của từng khách hàng
+SELECT customer_id,payment_date,amount,
+  LEAD (amount) OVER (PARTITION BY customer_id ORDER BY payment_Date) as next_amount
+amount - LEAD (amount) OVER (PARTITION BY customer_id ORDER BY payment_Date) as diff
+FROM payment
+-- tìm chênh lệch số tiền giữa các lần thanh toán cách nhau 3 lần của từng KH
+SELECT customer_id,payment_date,amount,
+  LEAD (amount,3) OVER (PARTITION BY customer_id ORDER BY payment_Date) as next_amount
+amount - LEAD (amount,3) OVER (PARTITION BY customer_id ORDER BY payment_Date) as diff
+FROM payment
 
 
 
