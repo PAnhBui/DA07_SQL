@@ -20,3 +20,24 @@ FROM customer AS a
 JOIN address AS b ON a.address_id=b.address_id);
 
 SELECT * FROM customer_info
+
+-- CREATE TEMPORARY TABLE
+--CREATE VIEW
+/*challenge: Tạo view có tên movies_category hiển thị danh sách film 
+gồm title,length,category name đc sx giảm dần theo length
+- Lọc KQ nh phim trong danh mục Action và Comedy*/
+CREATE OR REPLACE VIEW movies_category AS (
+SELECT 
+a.title, a.length,
+c.name as category_name
+FROM film AS a
+JOIN public.film_category AS b ON a.film_id=b.film_id
+JOIN public.category AS c ON c.category_id=b.category_id
+ORDER BY a.length DESC
+)
+
+SELECT * FROM movies_category
+WHERE category_name IN ('Action','Comedy')
+
+
+--ALTER TABLE
